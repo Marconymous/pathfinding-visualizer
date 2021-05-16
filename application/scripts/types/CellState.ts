@@ -1,0 +1,1 @@
+type CellState = 'blank' | 'visited' | 'wall' | 'start' | 'goal';

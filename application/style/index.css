@@ -1,0 +1,27 @@
+@import url(colors.css);
+
+.cell {
+    width: 10px;
+    height: 10px;
+    border: solid 1px black;
+}
+
+.blank {
+    background-color: var(--blank);
+}
+
+.visited {
+    background-color: var(--visited);
+}
+
+.wall {
+    background-color: var(--wall);
+}
+
+.start {
+    background-color: var(--start);
+}
+
+.goal {
+    background-color: var(--goal);
+}
