@@ -47,7 +47,7 @@ async function visit() {
     }
 }
 
-let foundPaths:CellLocation[][] = [];
+let foundPaths: CellLocation[][] = [];
 
 async function solve() {
     let start: HTMLElement = document.querySelector('.start');
@@ -57,8 +57,8 @@ async function solve() {
     searchNeighbors(+start.dataset.x, +start.dataset.y, []);
 
     await sleep(5000);
-    
-    let best:CellLocation[];
+
+    let best: CellLocation[];
     for (let i = 0; i < foundPaths.length; i++) {
         if (i == 0) best = foundPaths[i];
         else if (best.length > foundPaths[i].length) best = foundPaths[i];
@@ -72,9 +72,10 @@ async function solve() {
     }
 }
 
-let checkedPositions:CellLocation[] = [];
+let checkedPositions: CellLocation[] = [];
 
 function searchNeighbors(x: number, y: number, path: CellLocation[]) {
+    path = [...path];
     let foundLeft: boolean = false;
     let foundUp: boolean = false;
     let foundRight: boolean = false;
@@ -82,7 +83,7 @@ function searchNeighbors(x: number, y: number, path: CellLocation[]) {
 
     let alrdyChecked = false;
 
-    for (let i =0; i< checkedPositions.length; i++) {
+    for (let i = 0; i < checkedPositions.length; i++) {
         if (checkedPositions[i].x == x && checkedPositions[i].y == y) alrdyChecked = true;
     }
 
@@ -128,7 +129,7 @@ function searchNeighbors(x: number, y: number, path: CellLocation[]) {
         searchNeighbors(x, y + 1, newPath);
     }
 
-    checkedPositions.push({x:x, y:y});
+    checkedPositions.push({ x: x, y: y });
 }
 
 async function createGridFromElements() {

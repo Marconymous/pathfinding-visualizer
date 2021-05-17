@@ -76,6 +76,7 @@ function solve() {
 }
 let checkedPositions = [];
 function searchNeighbors(x, y, path) {
+    path = [...path];
     let foundLeft = false;
     let foundUp = false;
     let foundRight = false;
