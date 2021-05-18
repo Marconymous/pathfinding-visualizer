@@ -56,9 +56,15 @@ function solve() {
     return __awaiter(this, void 0, void 0, function* () {
         let start = document.querySelector('.start');
         let goal = document.querySelector('.goal');
-        grid = yield createGridFromElements();
-        searchNeighbors(+start.dataset.x, +start.dataset.y, []);
-        yield sleep(5000);
+        let grid = [];
+        for (let i = 0; i < GRID_HEIGHT; i++) {
+            let row = [];
+            for (let j = 0; j < GRID_WIDTH; j++) {
+                row.push(1);
+            }
+            grid.push(row);
+        }
+        findPath(grid, { x: 0, y: 0 }, { x: 19, y: 9 });
         let best;
         for (let i = 0; i < foundPaths.length; i++) {
             if (i == 0)
@@ -74,70 +80,27 @@ function solve() {
         }
     });
 }
-let checkedPositions = [];
-function searchNeighbors(x, y, path) {
-    path = [...path];
-    let foundLeft = false;
-    let foundUp = false;
-    let foundRight = false;
-    let foundDown = false;
-    let alrdyChecked = false;
-    for (let i = 0; i < checkedPositions.length; i++) {
-        if (checkedPositions[i].x == x && checkedPositions[i].y == y)
-            alrdyChecked = true;
-    }
-    if (alrdyChecked || x < 0 || x >= GRID_WIDTH || y >= GRID_HEIGHT || y < 0)
+var foundPath = false;
+function findPath(grid, start, goal) {
+    if (foundPath)
         return;
-    for (let i = 0; i < path.length; i++) {
-        let loc = path[i];
-        if (x + 1 == loc.x && y == loc.y)
-            foundRight = true;
-        if (x - 1 == loc.x && y == loc.y)
-            foundLeft = true;
-        if (x == loc.x && y + 1 == loc.y)
-            foundDown = true;
-        if (x + 1 == loc.x && y - 1 == loc.y)
-            foundUp = true;
-    }
-    console.log('' + foundLeft + '>' + foundUp + '>' + foundRight + '>' + foundDown);
-    if (x == 19 && y == 9) {
-        foundPaths.push(path);
+    if (start.x == 19 && start.y == 9) {
+        console.log('found goal');
+        foundPath = true;
         return;
     }
-    if (!foundLeft) {
-        let newPath = [...path];
-        newPath.push({ x: x - 1, y: y });
-        searchNeighbors(x - 1, y, newPath);
+    let ngh = neighbors(start);
+    for (let i = 0; i < ngh.length; i++) {
+        findPath(grid, ngh[i], goal);
     }
-    if (!foundUp) {
-        let newPath = [...path];
-        newPath.push({ x: x, y: y - 1 });
-        searchNeighbors(x, y - 1, newPath);
-    }
-    if (!foundRight) {
-        let newPath = [...path];
-        newPath.push({ x: x + 1, y: y });
-        searchNeighbors(x + 1, y, newPath);
-    }
-    if (!foundDown) {
-        let newPath = [...path];
-        newPath.push({ x: x, y: y + 1 });
-        searchNeighbors(x, y + 1, newPath);
-    }
-    checkedPositions.push({ x: x, y: y });
 }
-function createGridFromElements() {
-    return __awaiter(this, void 0, void 0, function* () {
-        let grid = [];
-        for (let y = 0; y < GRID_HEIGHT; y++) {
-            let row = [];
-            for (let x = 0; x < GRID_WIDTH; x++) {
-                row.push(selectCellFromGrid(y, x));
-            }
-            grid.push(row);
-        }
-        return grid;
-    });
+function neighbors(cell) {
+    let neighbors = [];
+    neighbors.push({ x: cell.x - 1, y: cell.y });
+    neighbors.push({ x: cell.x, y: cell.y - 1 });
+    neighbors.push({ x: cell.x + 1, y: cell.y });
+    neighbors.push({ x: cell.x, y: cell.y + 1 });
+    return neighbors;
 }
 function selectCellFromGrid(x, y) {
     return document.querySelector('[data-x="' + x + '"][data-y="' + y + '"]');
